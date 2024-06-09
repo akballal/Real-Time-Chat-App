@@ -25,14 +25,29 @@ export default function Chat({ socket, username, room }) {
     }
   };
 
-  useEffect(() => {
-    socket.on("receive_message", (data) => {
-      console.log("useEffect -> Before", messageList)
-      setMessageList((list) => [...list, data]);
-      console.log("useEffect -> After", messageList)
-    });
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.on("receive_message", (data) => {
+  //     console.log("useEffect -> Before", messageList)
+  //     console.log("data -> ", data)
+  //     setMessageList((list) => [...list, data]);
+  //     console.log("useEffect -> After", messageList)
+  //   });
+  // }, [socket]);
 
+  useEffect(() => {
+    const handleMessageReceive = (data) => {
+      console.log("data -> ", data);
+      setMessageList((prevList) => [...prevList, data]);
+    };
+
+    socket.on("receive_message", handleMessageReceive);
+
+    // Clean up the event listener on component unmount or dependency change
+    return () => {
+      socket.off("receive_message", handleMessageReceive);
+    };
+  }, []);
+  
   return (
     <>
       <div className="chat-window">
