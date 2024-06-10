@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  client:
+    build: ./client    # The context where the Dockerfile for the client service is located
+    ports:
+      - "3000:3000"      # Maps port 3000 on the host to port 80 on the container
+  
+  server:
+    build: ./server    # The context where the Dockerfile for the server service is located
+    ports:
+      - "3001:3001"    # Maps port 3001 on the host to port 3001 on the container
+    environment:
+      - NODE_ENV=development # Sets the NODE_ENV environment variable to 'development'

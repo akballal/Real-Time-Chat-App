@@ -25,15 +25,6 @@ export default function Chat({ socket, username, room }) {
     }
   };
 
-  // useEffect(() => {
-  //   socket.on("receive_message", (data) => {
-  //     console.log("useEffect -> Before", messageList)
-  //     console.log("data -> ", data)
-  //     setMessageList((list) => [...list, data]);
-  //     console.log("useEffect -> After", messageList)
-  //   });
-  // }, [socket]);
-
   useEffect(() => {
     const handleMessageReceive = (data) => {
       console.log("data -> ", data);
