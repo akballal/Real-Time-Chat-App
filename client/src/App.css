@@ -156,36 +156,39 @@ body {
   border: 1px solid #263238;
   border-top: none;
   display: flex;
+  align-items: center; /* Center items vertically */
+  padding: 0 5px; /* Add padding for a bit of spacing */
 }
 
 .chat-window .chat-footer input {
-  height: 100%;
+  height: 80%; /* Adjust height to avoid touching the footer edges */
   flex: 85%;
   border: 0;
   padding: 0 0.7em;
   font-size: 1em;
   border-right: 1px dotted #607d8b;
-
   outline: none;
   font-family: "Open Sans", sans-serif;
 }
 
 .chat-window .chat-footer button {
   border: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   flex: 15%;
-  height: 100%;
+  height: 80%; /* Adjust height for better alignment */
   background: transparent;
   outline: none;
-  font-size: 25px;
+  font-size: 20px; /* Reduced font size for better alignment */
   color: lightgray;
 }
 
 .chat-window .chat-footer button:hover {
   color: #43a047;
 }
+
 .hide {
   opacity: 0 !important;
 }
