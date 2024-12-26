@@ -3,45 +3,45 @@ import "./App.css";
 import io from "socket.io-client";
 import Chat from "./components/Chat";
 
-const socket = io("http://localhost:3001");
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+// Establish the socket connection
+const socket = io(backendUrl);
 
 function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-  const Joinroom = () => {
+  // Handle room joining
+  const joinRoom = () => {
     if (username !== "" && room !== "") {
       socket.emit("Join_room", room);
-      setShowChat(true)
+      setShowChat(true);
     }
   };
 
   return (
-    <>
     <div className="App">
       {!showChat ? (
-      <div className="joinChatContainer">
-      <h3>Join a chat</h3>
-      <input
-        type="text"
-        placeholder="Akshay"
-        onChange={(e) => setUsername(e.target.value)}
-      ></input>
-
-      <input
-        type="text"
-        placeholder="123akshay"
-        onChange={(e) => setRoom(e.target.value)}
-      ></input>
-
-      <button onClick={Joinroom}>Join A Room</button>
-
-      </div>)
-      :(
-      <Chat socket={socket} username={username} room={room} />)}
-      </div>
-    </>
+        <div className="joinChatContainer">
+          <h2>Welcome to Chat Room</h2>
+          <p>Join a room to start chatting with friends!</p>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter room ID"
+            onChange={(e) => setRoom(e.target.value)}
+          />
+          <button onClick={joinRoom}>Join Room</button>
+        </div>
+      ) : (
+        <Chat socket={socket} username={username} room={room} />
+      )}
+    </div>
   );
 }
 
