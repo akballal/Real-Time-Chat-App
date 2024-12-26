@@ -3,16 +3,22 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-app.use(cors());
-
+const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:3000'];
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true, // Required for cross-origin requests
   },
 });
+
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true, // Allow cookies if required
+}));
 
 io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
