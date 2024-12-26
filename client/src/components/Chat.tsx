@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 
-export default function Chat({ socket, username, room }) {
-  const [currentMessage, setCurrentMessage] = useState("");
-  const [messageList, setMessageList] = useState([]);
+// Define the type for message objects
+type Message = {
+  room: string;
+  username: string;
+  message: string;
+  time: string;
+};
+
+type ChatProps = {
+  socket: any; // Use proper typing for the socket if you have it, e.g., `Socket` from "socket.io-client"
+  username: string;
+  room: string;
+};
+
+export default function Chat({ socket, username, room }: ChatProps) {
+  const [currentMessage, setCurrentMessage] = useState<string>(""); // Define the type as string
+  const [messageList, setMessageList] = useState<Message[]>([]); // Define the type as an array of `Message`
+
   const sendMessage = async () => {
     if (currentMessage !== "") {
-      const messageData = {
+      const messageData: Message = {
         room,
         username,
         message: currentMessage,
@@ -16,29 +31,28 @@ export default function Chat({ socket, username, room }) {
           new Date(Date.now()).getMinutes(),
       };
 
-
       await socket.emit("send_message", messageData);
-      console.log("Before", messageList)
-      setMessageList((list) => [...list, messageData]);
-      console.log("After", messageList)
+      console.log("Before", messageList);
+      setMessageList((list) => [...list, messageData]); // Append the new message to the list
+      console.log("After", messageList);
       setCurrentMessage("");
     }
   };
 
   useEffect(() => {
-    const handleMessageReceive = (data) => {
+    const handleMessageReceive = (data: Message) => {
       console.log("data -> ", data);
-      setMessageList((prevList) => [...prevList, data]);
+      setMessageList((prevList) => [...prevList, data]); // Append the received message to the list
     };
 
     socket.on("receive_message", handleMessageReceive);
 
-    // Clean up the event listener on component unmount or dependency change
+    // Clean up the event listener on component unmount
     return () => {
       socket.off("receive_message", handleMessageReceive);
     };
-  }, []);
-  
+  }, [socket]); // Include socket as a dependency
+
   return (
     <>
       <div className="chat-window">
@@ -47,26 +61,23 @@ export default function Chat({ socket, username, room }) {
         </div>
         <div className="chat-body">
           <ScrollToBottom className="message-container">
-            {messageList.map((messageContent) => {
-              console.log("Message_List", messageList);
-              //console.log(messageContent)
-              return (
-                <div
-                  className="message"
-                  id={username === messageContent.username ? "you" : "other"}
-                >
-                  <div>
-                    <div className="message-content">
-                      <p>{messageContent.message}</p>
-                    </div>
-                    <div className="message-meta">
-                      <p id="time">{messageContent.time}</p>
-                      <p id="author">{messageContent.username}</p>
-                    </div>
+            {messageList.map((messageContent, index) => (
+              <div
+                key={index} // Use a unique key for list items
+                className="message"
+                id={username === messageContent.username ? "you" : "other"}
+              >
+                <div>
+                  <div className="message-content">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="message-meta">
+                    <p id="time">{messageContent.time}</p>
+                    <p id="author">{messageContent.username}</p>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </ScrollToBottom>
         </div>
         <div className="chat-footer">
@@ -78,8 +89,7 @@ export default function Chat({ socket, username, room }) {
             onKeyPress={(event) => {
               event.key === "Enter" && sendMessage();
             }}
-          ></input>
-
+          />
           <button onClick={sendMessage}>&#9658;</button>
         </div>
       </div>
