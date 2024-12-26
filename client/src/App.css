@@ -95,8 +95,8 @@ body {
 
 /* Chat Window Styles */
 .chat-window {
-  width: 40%;
-  height: 80%;
+  width: 600px;
+  height: 400px;
   display: flex;
   flex-direction: column;
   border-radius: 12px;
