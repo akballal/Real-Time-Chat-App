@@ -10,6 +10,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px; /* Added padding for smaller screens */
+  box-sizing: border-box;
 }
 
 body {
@@ -308,7 +310,8 @@ body {
   }
 
   .chat-window {
-    height: 90%; /* Fit better on smaller screens */
+    width: 100%;
+    height: 80%;
   }
 
   .chat-window .chat-header {
@@ -323,12 +326,22 @@ body {
 }
 
 @media (max-width: 480px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .joinChatContainer {
+    width: 100%;
+    padding: 10px;
+  }
+
   .joinChatContainer h2 {
     font-size: 1.2rem;
   }
 
   .chat-window {
-    height: 100%; /* Utilize full screen on very small devices */
+    width: 100%;
+    height: 90%;
   }
 
   .chat-window .chat-header {
